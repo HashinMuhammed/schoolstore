@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>  
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'schoolapp:logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'schoolapp:login' %}">Login</a></li>
+            <li><a href="{% url 'schoolapp:register' %}">Register</a></li>
+            <li>
+                <a href="">Department</a>
+                <ul class="dropdown"> 
+                    <li><a href="https://en.wikipedia.org/wiki/Computer">Computer</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Commerce">commerce</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Science">Science</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Humanities">Humanities</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Physics">Physics</a></li>
+                </ul>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+{% block content %}
+<div class="register">
+<h2>Register form</h2>
+
+<form method="post" id="personForm" data-cities-url="{% url 'schoolapp:ajax_load_cities' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+<a href="{% url 'schoolapp:index' %}"><button>Return to home page</button></a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $("#id_department").change(function () {
+        const url = $("#personForm").attr("data-cities-url");  // get the url of the `load_cities` view
+        const departmentId = $(this).val();  // get the selected country ID from the HTML input
+
+        $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+            data: {
+                'department_id': departmentId       // add the country id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+                $("#id_course").html(data);  // replace the contents of the city input with the data that came from the server
+                /*
+
+                let html_data = '<option value="">---------</option>';
+                data.forEach(function (city) {
+                    html_data += `<option value="${city.id}">${city.name}</option>`
+                });
+                console.log(html_data);
+                $("#id_course").html(html_data);
+
+                */
+            }
+        });
+
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>  
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'schoolapp:logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'schoolapp:login' %}">Login</a></li>
+            <li><a href="{% url 'schoolapp:register' %}">Register</a></li>
+            <li>
+                <a href="">Department</a>
+                <ul class="dropdown"> 
+                    <li><a href="https://en.wikipedia.org/wiki/Computer">Computer</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Commerce">commerce</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Science">Science</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Humanities">Humanities</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Physics">Physics</a></li>
+                </ul>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="button-login" style="padding: 55px 20px;  ">
+        <a href="{% url 'schoolapp:login' %}">
+            {% if user.is_authenticated %}
+            <h1>new page</h1>
+            <a href="{% url 'schoolapp:form' %}"><button>Form Button</button></a>
+            {% else %}
+        <button style="background-color: blue; color: white; border: none; padding: 8px; font-weight: 700;cursor: pointer;">Login Page</button></a>
+        {% endif %}
+    </div>
+           {% block content %}
+           {% endblock %}
+</body>
+</html>
